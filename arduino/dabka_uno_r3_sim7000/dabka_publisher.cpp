@@ -13,7 +13,7 @@ fona(fona), imei(imei), mqttServer(mqttServer), mqttPort(mqttPort), status(false
     Serial.println(F("Attempting to start GPRS receiver"));
     return fona->enableGPRS(true);
   };
-  if(retry(retryFunc, 2000, 10)) {
+  if(retry(retryFunc, 5000, 10)) {
     Serial.println(F("Enabled GPRS receiver"));
     status = true;
   } else {

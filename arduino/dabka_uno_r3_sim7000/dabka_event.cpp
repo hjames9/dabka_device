@@ -36,21 +36,43 @@ void DabkaEvent::getData() {
     Serial.println(F("Attempting to retrieve GPS coordinates"));
     return fona->getGPS(&latitude, &longitude, &speedKph, &heading, &altitude);
   };
-  if(retry(retryFunc, 3000, 10)) {
+  if(retry(retryFunc, 5000, 10)) {
     Serial.println(F("Retrieved GPS coordinates"));
     status = true;
-
+/*
+    //"19/09/08,13:39:18+00"
+    if(fona->enableNTPTimeSync(true, F("pool.ntp.org"))) {
+      Serial.println(F("Enabled network time syncing"));
+    } else {
+      Serial.println(F("Could not enable network time syncing"));
+    }
+*/
     char timeBuffer[23] = {0};
     if(fona->getTime(timeBuffer, sizeof(timeBuffer))) {
       Serial.print(F("Retrieved current timestamp: ")); Serial.println(timeBuffer);
 
       //Example: "19/09/07,23:21:12-16"
-      tm tm;
-      int timezone;
-      sscanf(timeBuffer, "%d/%d/%d,%d:%d:%d-%d", &tm.tm_year, &tm.tm_mon, &tm.tm_mday, &tm.tm_hour, &tm.tm_min, &tm.tm_sec, &timezone);
-      tm.tm_year += 100;
-      timestamp = mktime(&tm) * 1000; //Convert to milliseconds
-      Serial.print(F("Converted current timestamp: ")); Serial.println(timestamp);
+      tm currentTm;
+      int currentTimeArr[7] = {0};
+      int ret = sscanf(timeBuffer, "\"%d/%d/%d,%d:%d:%d-%d\"", &currentTimeArr[0], &currentTimeArr[1], &currentTimeArr[2], &currentTimeArr[3], &currentTimeArr[4], &currentTimeArr[5], &currentTimeArr[6]);
+      switch(ret) {
+      case 7:
+        {
+          currentTm.tm_year = currentTimeArr[0] + 100;
+          currentTm.tm_mon = currentTimeArr[1];
+          currentTm.tm_mday = currentTimeArr[2];
+          currentTm.tm_hour = currentTimeArr[3];
+          currentTm.tm_min = currentTimeArr[4];
+          currentTm.tm_sec = currentTimeArr[5];
+          currentTm.tm_isdst = 0;
+          timestamp = mktime(&currentTm) + UNIX_OFFSET;
+          Serial.print(F("Converted current timestamp: ")); Serial.println(timestamp);
+        }
+        break;
+      default:
+        Serial.print(F("Error converting timestamp: ")); Serial.println(ret);
+        break;
+      }
     } else {
       Serial.println(F("Could not retrieve current timestamp"));
     }
@@ -75,5 +97,5 @@ float DabkaEvent::HaversineDistance(const DabkaEvent& e1, const DabkaEvent& e2) 
 const float DabkaEvent::EARTH_RADIUM_KM = 6372.8;
 const float DabkaEvent::THRESHOLD_DISTANCE_M = 3;
 const char DabkaEvent::DOG_NAME[] = "algo";
-const char DabkaEvent::LOCATION_TMPL[] = "{\"id\": \"%s\", \"deviceTimestamp\": %d, \"location\": {\"longitude\": %s, \"latitude\": %s}}";
+const char DabkaEvent::LOCATION_TMPL[] = "{\"id\": \"%s\", \"deviceTimestamp\": %ld000, \"location\": {\"longitude\": %s, \"latitude\": %s}}";
 char DabkaEvent::locationBuffer[sizeof(LOCATION_TMPL) + 32 + 15 + 15 + 15] = {0};

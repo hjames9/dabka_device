@@ -59,11 +59,11 @@ private:
 };
 
 inline const char* DabkaEvent::getJson() {
-  char longitudeStr[16] = {0};
-  char latitudeStr[16] = {0};
+  char longitudeStr[14] = {0};
+  char latitudeStr[13] = {0};
 
-  dtostrf(longitude, sizeof(longitudeStr) - 1, 8, longitudeStr);
-  dtostrf(latitude, sizeof(latitudeStr) - 1, 8, latitudeStr);
+  dtostrf(longitude, 0, 8, longitudeStr);
+  dtostrf(latitude, 0, 8, latitudeStr);
   sprintf(locationBuffer, LOCATION_TMPL, DOG_NAME, timestamp, longitudeStr, latitudeStr);
 
   return locationBuffer;
