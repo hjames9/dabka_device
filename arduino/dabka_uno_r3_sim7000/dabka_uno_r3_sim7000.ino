@@ -140,7 +140,7 @@ void loop() {
   DabkaEvent currentEvent(&fona);
 
   if(currentEvent) {
-    if(currentEvent != lastEvent) {
+    if((currentEvent != lastEvent) || !lastEvent.wasPublished()) {
       if(publisher) {
         publisher.publishEvent(currentEvent);
         Serial.println(F("Published GPS data"));

@@ -5,7 +5,7 @@
 #include "Adafruit_FONA.h"
 
 DabkaEvent::DabkaEvent(Adafruit_FONA_LTE* fona, bool sample) :
-  fona(fona), longitude(0.0), latitude(0.0), speedKph(0.0), heading(0.0), altitude(0.0), timestamp(0), status(false) {
+  fona(fona), longitude(0.0), latitude(0.0), speedKph(0.0), heading(0.0), altitude(0.0), timestamp(0), status(false), published(false) {
   if(sample) {
     //Start up GPS receiver
     Serial.println(F("Starting GPS receiver"));

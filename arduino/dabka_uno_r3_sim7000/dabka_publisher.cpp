@@ -56,6 +56,7 @@ void DabkaPublisher::publishEvent(const DabkaEvent& event) {
       continue;
     }
     Serial.println(F("Successful publish of json message to MQTT server"));
+    event.published = true;
     break;
   } while(++totalRetryCount < 5);
 }

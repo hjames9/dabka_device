@@ -14,7 +14,7 @@ public:
   ~DabkaPublisher();
 
   void publishEvent(const DabkaEvent& event);
-  inline operator bool();
+  inline operator bool() const;
 
 private:
   Adafruit_FONA_LTE* fona;
@@ -28,7 +28,7 @@ private:
   Adafruit_MQTT_Publish feed;
 };
 
-inline DabkaPublisher::operator bool() {
+inline DabkaPublisher::operator bool() const {
   return status;
 }
 
