@@ -3,6 +3,7 @@
 
 #include "dabka_event.h"
 #include "dabka_publisher.h"
+#include "secrets.h"
 
 //FONA settings
 static const int FONA_PWRKEY = 6;
@@ -14,8 +15,8 @@ static const int FONA_RX = 11; // Microcontroller RX
 static const int SAMPLING_RATE = 30;
 
 //MQTT settings
-static const char MQTT_SERVER[] = "18.191.148.99";
-static const int  MQTT_PORT = 1883;
+static const char MQTT_SERVER[] = SECRET_MQTT_SERVER;
+static const int  MQTT_PORT = SECRET_MQTT_PORT;
 
 SoftwareSerial fonaSS = SoftwareSerial(FONA_TX, FONA_RX);
 Adafruit_FONA_LTE fona = Adafruit_FONA_LTE();
