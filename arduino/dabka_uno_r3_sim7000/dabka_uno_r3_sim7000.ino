@@ -41,7 +41,7 @@ void serialSetup() {
 
   fonaSS.begin(115200); // Default SIM7000 shield baud rate
   Serial.println(F("Configuring to 9600 baud"));
-  fonaSS.println("AT+IPR=9600"); // Set baud rate
+  fonaSS.println(F("AT+IPR=9600")); // Set baud rate
   delay(100); // Short pause to let the command run
   fonaSS.begin(9600);
   if(!fona.begin(fonaSS)) {
